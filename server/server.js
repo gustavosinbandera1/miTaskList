@@ -35,8 +35,39 @@ app.set('port',process.env.PORT | 3000);
 
 //create server
 var server = http.createServer(app);
-
+//socket
+var io = require('socket.io')(server);
 
 server.listen(app.get('port'), () => {
   console.log(`Api running on localhost:${app.get('port')}`);
 });
+
+
+//real time communication
+ clientListName = [];
+io.on('connection', (socket) => {
+
+  clientListName.push(socket.handshake.query.username);
+  io.emit('updateSocketList', clientListName);
+  io.emit('addUserToSocketList', socket.handshake.query.userName);
+  console.log('el socket se ha conectado');
+  console.log( socket.handshake.query);
+
+  // Broadcast messages
+  socket.on('send-message', (data) => {
+    console.log('recibiedo mensaje');
+    console.log(data);
+    io.emit('message-received', data);
+  });
+
+  //disconnected socket
+  socket.on('disconnect', () => {
+    let username = socket.handshake.query.userName;
+    let userIndex = clientListName.indexOf(socket.handshake.query.username);
+    if(userIndex != -1) {
+      clientListName.splice(userIndex, 1);
+      io.emit('updateSocketList', clientListName);
+     // io.emit('removeUserfromSocketList', username);
+    }
+  })
+})
