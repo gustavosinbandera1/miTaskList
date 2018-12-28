@@ -1,3 +1,31 @@
-<p>
-  task works!
-</p>
+<form [formGroup]="form" (ngSubmit)="addPerson()">
+
+  <vaadin-text-field
+    label="First Name"
+    formControlName="firstName"
+    ngDefaultControl>
+  </vaadin-text-field>
+
+  <vaadin-text-field
+    label="Last Name"
+    formControlName="lastName"
+    ngDefaultControl>
+  </vaadin-text-field>
+
+  <vaadin-checkbox [checked]='isDone'  (change)="isDone = !isDone" >Checked</vaadin-checkbox>
+
+  <vaadin-button (click)="addTask()">
+    <iron-icon icon="lumo:arrow-right" slot="suffix"></iron-icon>Add
+  </vaadin-button>
+</form>
+
+<h1>{{isDone}}</h1>
+
+
+<vaadin-grid [items]="people">
+  <vaadin-grid-column path="firstName" header="First name">
+  </vaadin-grid-column>
+  <vaadin-grid-column path="lastName" header="Last name"> </vaadin-grid-column>
+  <vaadin-grid-column path="isDone" header="isDone"> </vaadin-grid-column>
+</vaadin-grid>
+

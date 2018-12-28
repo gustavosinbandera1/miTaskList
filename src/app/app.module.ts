@@ -1,6 +1,7 @@
 import { RouterModule, Routes } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
@@ -10,7 +11,9 @@ import { TaskComponent } from './task/task.component';
 import { TaskService } from './services/task.service';
 import { SocketService } from './services/socket.service';
 import { ConexionComponent } from './conexion/conexion.component';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialModule } from './material.module';
+import { HttpClientModule } from '@angular/common/http';
 const ROUTES: Routes = [
   {
     path: '',
@@ -45,9 +48,14 @@ const ROUTES: Routes = [
   ],
   imports: [
     BrowserModule,
+    ReactiveFormsModule,
     RouterModule.forRoot(ROUTES),
-    FormsModule
+    FormsModule,
+    BrowserAnimationsModule,
+    MaterialModule,
+    HttpClientModule
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [TaskService, SocketService],
   bootstrap: [AppComponent]
 })

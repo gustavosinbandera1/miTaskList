@@ -1,6 +1,6 @@
-<!--<div id="note">
+<div id="note">
 	<h2>
-		Please Enter Your Name To Start Chatting...
+		Ventana de Chat
 	</h2>
 </div>
 <div id="divID">
@@ -13,22 +13,25 @@
 
 <h1>{{messageText}}</h1>
 <div class="chat-bottom-bar">
-        <div class="input-group" >
-            <input type="text"
-                      class="form-control input-sm chat-input"
-                      placeholder="Enter message"
-                      name="messageText"
-                      [(ngModel)]="messageText" />
-            <span class="input-group-btn">
-            <input type="button" (click) = 'sendMessage()' class="btn btn-sm chat-submit-button" />
-        </span>
-        </div>
+  <div class="input-group" >
+      <input type="text"
+                class="form-control input-sm chat-input"
+                placeholder="Enter message"
+                name="messageText"
+                [(ngModel)]="messageText"
+      />
+      <button  (click) = 'sendMessage()' class="btn btn-sm chat-submit-button">Send</button>
+  </div>
 </div>
--->
+
 
 <h2>Chat Messages</h2>
 
 <div class=padre>
+  <div class=output [innerHTML]="output"> </div>
+
+
+<!--
   <div class="container">
     <img src="/w3images/bandmember.jpg" alt="Avatar" style="width:100%;">
     <p>Hello. How are you today?</p>
@@ -76,5 +79,7 @@
       <p>Nah, I dunno. Play soccer.. or learn more coding perhaps?</p>
       <span class="time-left">11:05</span>
     </div>
-
+-->
 </div>
+
+

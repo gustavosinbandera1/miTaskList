@@ -30,7 +30,7 @@ app.get('*', (req, res) => {
 })
 
 //set port
-app.set('port',process.env.PORT | 3000);
+app.set('port',process.env.PORT | 8080);
 
 
 //create server
@@ -59,6 +59,11 @@ io.on('connection', (socket) => {
     console.log(data);
     io.emit('message-received', data);
   });
+
+  socket.on('message', (m) => {
+    console.log('[server](message): %s', JSON.stringify(m));
+    io.emit('message', m);
+});
 
   //disconnected socket
   socket.on('disconnect', () => {
