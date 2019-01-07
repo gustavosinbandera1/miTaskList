@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+//var mongoose = require('mongoose');
 var Task = require('../models/taskModel');
 var taskController = {};
 
@@ -25,6 +25,10 @@ taskController.show = function (req, res) {
 }
 
 taskController.create = function(req, res){
+  console.log('el body');
+  console.log(req.body);
+
+
   var task = new Task(req.body);
   task.save(function(err){
     if(err) {

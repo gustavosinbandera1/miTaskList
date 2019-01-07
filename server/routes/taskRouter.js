@@ -5,7 +5,7 @@ var db = mongojs('mongodb://gustavosinbandera1:nicolas901028@ds157509.mlab.com:5
 
 
 //get  all task
-router.get('/tasks', function (req, res, next) {
+router.get('/task', function (req, res, next) {
   db.tasks.find(function(err, tasks){
     if(err) {
       res.send(err);
@@ -15,7 +15,7 @@ router.get('/tasks', function (req, res, next) {
 });
 
 //get single task
-router.get('/tasks/:id', function (req, res, next) {
+router.get('/task/:id', function (req, res, next) {
   db.tasks.find({_id: mongojs.ObjectID(req.params.id)},function(err, task){
     if(err) {
       res.send(err);

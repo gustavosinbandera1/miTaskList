@@ -1,8 +1,9 @@
 var app = require('./config/app');
-var path = require('path');
+
 var http = require('http');
 var server = http.createServer(app);
-
+var io = require('socket.io')(server);
+app.set('socketio', io);
 
 var mongoose = require('mongoose');
 var db = 'mongodb://gustavosinbandera1:nicolas901028@ds157509.mlab.com:57509/mytasklist_gustavo';
@@ -10,9 +11,6 @@ var db = 'mongodb://gustavosinbandera1:nicolas901028@ds157509.mlab.com:57509/myt
 mongoose.connect(db, {useNewUrlParser: true})
 .then(() => {})
 .catch((err) => {});
-
-
-
 
 
 server.listen(app.get('port'), () => {

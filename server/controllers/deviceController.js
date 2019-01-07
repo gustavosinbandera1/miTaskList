@@ -1,15 +1,15 @@
-var mongoose = require('mongoose');
+//var mongoose = require('mongoose');
 var Device = require('../models/deviceModel');
 var deviceController = {};
 
 //show all devices
 deviceController.list = function(req, res){
-  Device.find({}).exec(function(err, employees){
+  Device.find({}).exec(function(err, devices){
     if(err) {
       console.log("Error:" + err);
       res.status(400).json({err:err});
     }else {
-      res.json(employees);
+      res.json(devices);
     }
   });
 }
@@ -17,7 +17,7 @@ deviceController.list = function(req, res){
 //show device by ID
 deviceController.show = function(req, res) {
   Device.findOne({_id: req.params.id}).exec(function(err, device) {
-    if(errr) {
+    if(err) {
       res.status(400).json({err: err});
     }else {
       res.json(device);
@@ -27,6 +27,10 @@ deviceController.show = function(req, res) {
 
 //create device
 deviceController.create = function(req, res) {
+  console.log('la peticion device');
+  console.log(req.body);
+
+
   var device = new Device(req.body);
   device.save(function(err){
     if(err) {
