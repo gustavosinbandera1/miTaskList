@@ -16,11 +16,6 @@ import { MaterialModule } from './material.module';
 import { HttpClientModule } from '@angular/common/http';
 const ROUTES: Routes = [
   {
-    path: '',
-    redirectTo: 'inicio',
-    pathMatch: 'full'
-  },
-  {
     path: 'inicio',
     component:  InicioComponent
   },
@@ -35,7 +30,12 @@ const ROUTES: Routes = [
   {
     path: 'conexion',
     component: ConexionComponent
-  }
+  },
+  {
+    path: '',
+    redirectTo: 'inicio',
+    pathMatch: 'full'
+  },
 ];
 
 @NgModule({

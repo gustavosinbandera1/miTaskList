@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class TaskService {
-  private _url: any = 'http://localhost:3000/api/tasks';
+  private _url: any = 'http://localhost:8080/api/tasks';
   constructor(private http: HttpClient) { }
 
   getTasks() {
