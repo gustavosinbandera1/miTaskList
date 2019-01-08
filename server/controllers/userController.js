@@ -1,12 +1,13 @@
-var mongoose = require('mongoose');
+//var mongoose = require('mongoose');
 var User = require('../models/userModel');
 var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
 var userController = {};
+var config = require('../config/config');
 
 //show all users
 userController.list = function(req, res){
-  User.find({}).exec(function(err, users){
+  User.find({}).select('-password').exec(function(err, users){
     if(err) {
       console.log("Error:" + err);
       res.status(400).json({err:err});
@@ -16,12 +17,10 @@ userController.list = function(req, res){
   });
 }
 
-
-
 //show user by ID
 userController.show = function(req, res) {
   User.findOne({_id: req.params.id}).exec(function(err, user) {
-    if(errr) {
+    if(err) {
       res.status(400).json({err: err});
     }else {
       res.json(user);
@@ -33,70 +32,56 @@ userController.show = function(req, res) {
 
 //create user
 userController.signup = (req, res) => {
-  console.log('la peticion  ');
-  console.log(req.body);
-
-
  var password = req.body.password;
  var email = req.body.email;
 
  var hash = bcrypt.hashSync(password,bcrypt.genSaltSync(10));
 
- if(hash) {
-  const user = new User({
-    email: email,
-    password: hash
-  });
+  if(hash) {
+    const user = new User({
+      email: email,
+      password: hash
+    });
 
-  user.save(function(err){
-    if(err) {
-      console.log('error'+ err);
-      res.status(500).json({err:err});
-    }else {
-      res.json({user});
-    }
-  });
+    user.save(function(err){
+      if(err) {
+        console.log('error'+ err);
+        res.status(500).json({err:err});
+      }
+      else {
+        const JWT = jwt.sign({
+          email: user.email,
+          _id: user.id
+        },
+        config.secret,
+        {
+          expiresIn: '2h'
+        });
+        res.status(200).json({user:user, token: JWT});
+      }
+    });
 
-}
-/*  bcrypt.hash(password, 10 , (err, hash) => {
-    if(err) {
-      return res.status(500).json({ err:err });
-    }else {
-      const user = new User({
-        _id: mongoose.Types.ObjectId,
-        email: email,
-        password: hash
-      });
-
-      user.save(function(err){
-        if(err) {
-          console.log('error');
-          res.status(500).json({err:err});
-        }else {
-          res.json({user});
-        }
-      });
-    }
-  });*/
-
+  }
 }
 
 
 
 userController.signin = (req, res) => {
-  User.findOne({email: req.body.email}).exec().then(function(user){
+  User.findOne({email: req.body.email}).exec()
+  .then(function(user){
     bcrypt.compare(req.body.password,user.password, function(err, result){
       if(err) {
         return res.status(401).json({
           failed:'Unauthorized access'
         });
       }
-      if (result) {
+      if (result)
+      {
         const JWT = jwt.sign({
           email: user.email,
           _id: user.id
         },
-        'secret',
+        config.secret,
         {
           expiresIn: '2h'
         });

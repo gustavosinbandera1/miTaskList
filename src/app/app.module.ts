@@ -33,7 +33,7 @@ const ROUTES: Routes = [
   },
   {
     path: '',
-    redirectTo: 'inicio',
+    redirectTo: 'conexion',
     pathMatch: 'full'
   },
 ];

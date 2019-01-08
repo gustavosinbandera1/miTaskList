@@ -29,14 +29,20 @@ deviceController.show = function(req, res) {
 deviceController.create = function(req, res) {
   console.log('la peticion device');
   console.log(req.body);
+  var socket_id = [];
+  var io = req.app.get('socketio');
 
 
+  if(!req.body.owner || !req.body.mac || req.body.type){
+    res.status(500).json({err: 'bad data'});
+  }
   var device = new Device(req.body);
   device.save(function(err){
     if(err) {
       res.status(400).json({err:err});
     } else {
-      console.log('usuario creadom con exito');
+      io.emit('deviceCreate', {device:device})
+      console.log('usuario creado con exito');
       res.json(device);
     }
   });

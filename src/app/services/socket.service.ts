@@ -10,7 +10,7 @@ export class SocketService {
   }
   connect(path: string, username: string, nickname: string) {
     if (!path) {
-       path = 'http://localhost:3000';
+       path = 'http://localhost:8080';
     }
      return this.socket = io.connect(path, {query: `username= ${username}+${nickname} `});
   }

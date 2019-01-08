@@ -5,7 +5,7 @@ var db = mongojs('mongodb://gustavosinbandera1:nicolas901028@ds157509.mlab.com:5
 
 
 //get  all task
-router.get('/task', function (req, res, next) {
+router.get('/', function (req, res, next) {
   db.tasks.find(function(err, tasks){
     if(err) {
       res.send(err);
@@ -15,7 +15,7 @@ router.get('/task', function (req, res, next) {
 });
 
 //get single task
-router.get('/task/:id', function (req, res, next) {
+router.get('/:id', function (req, res, next) {
   db.tasks.find({_id: mongojs.ObjectID(req.params.id)},function(err, task){
     if(err) {
       res.send(err);
@@ -25,7 +25,7 @@ router.get('/task/:id', function (req, res, next) {
 });
 
 //save task
-router.post('/task', function(req,res,next){
+router.post('/', function(req,res,next){
   var task = req.body;
   if(!task.title || (task.isDone + '')){
     res.status(400);
@@ -43,7 +43,7 @@ router.post('/task', function(req,res,next){
 });
 
 //delete task
-router.delete('/tasks/:id', function (req, res, next) {
+router.delete('/:id', function (req, res, next) {
   db.tasks.remove({_id: mongojs.ObjectID(req.params.id)},function(err, task){
     if(err) {
       res.send(err);
@@ -54,7 +54,7 @@ router.delete('/tasks/:id', function (req, res, next) {
 
 //update
 
-router.put('/tasks/:id', function (req, res, next) {
+router.put('/:id', function (req, res, next) {
   var task = req.body;
   var updTask = {};
 

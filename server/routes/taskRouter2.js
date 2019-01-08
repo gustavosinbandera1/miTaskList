@@ -3,20 +3,20 @@ var taskRouter = express.Router();
 var taskController = require('../controllers/taskController');
 
 //create device C
-taskRouter.post('/task', taskController.create);
+taskRouter.post('/', taskController.create);
 
 //get all devices R
-taskRouter.get('/task', taskController.list);
+taskRouter.get('/', taskController.list);
 
 //get simple device by ID
-taskRouter.get('/task/:id', taskController.show);
+taskRouter.get('/:id', taskController.show);
 
 
 
 //update device U
-taskRouter.put('/task/:id', taskController.update);
+taskRouter.put('/:id', taskController.update);
 
 //delete device D
-taskRouter.post('/task/:id',taskController.delete);
+taskRouter.post('/:id',taskController.delete);
 
 module.exports = taskRouter;
