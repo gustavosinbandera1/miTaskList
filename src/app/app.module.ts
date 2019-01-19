@@ -28,12 +28,12 @@ const ROUTES: Routes = [
     component: TaskComponent
   },
   {
-    path: 'conexion',
+    path: 'iot_control',
     component: ConexionComponent
   },
   {
     path: '',
-    redirectTo: 'conexion',
+    redirectTo: 'iot_control',
     pathMatch: 'full'
   },
 ];

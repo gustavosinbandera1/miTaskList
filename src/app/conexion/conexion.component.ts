@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import * as globalVar from '../services/global';
+
 import { SocketService  } from '../services/socket.service';
 
 @Component({
@@ -9,32 +9,40 @@ import { SocketService  } from '../services/socket.service';
 })
 
 export class ConexionComponent implements OnInit {
-  socket: any;
+ // socket: any;
   messages = new Array();
   messageText: any = 'hola';
   output: any;
 
-  constructor(private socketService: SocketService) {
+  constructor(private socket: SocketService) {
   }
 
   ngOnInit() {
   }
 
-  submit(path: string, name: string, nickname: string) {
+  submit(path: string, email: string, nickname: string) {
 
-    this.socketService.connect(path, name, nickname);
-
-    this.socketService.on('updateSocketList', (data: any) => {
-      console.log(data);
+    this.socket.connect(path, email);
+    this.socket.emit('userConnection', email);
+    this.socket.on('connectionAccepted', (data: any) => {
+      console.log('aceptaron la conexion socket', data);
     });
 
-    this.socketService.on('message-received', (msg: any) => {
+  /*   this.socket.on('', (msg: any) => {
       console.log('recibiendo los mensajes');
       this.messages.push(msg);
       console.log(msg);
       console.log(this.messages);
       this.output += `<div id='container'><p>${msg.text}</p><span id='time-left'>${msg.date}</span></div>`;
-    });
+    }); */
+
+   /*  this.socket.on('message-received', (msg: any) => {
+      console.log('recibiendo los mensajes');
+      this.messages.push(msg);
+      console.log(msg);
+      console.log(this.messages);
+      this.output += `<div id='container'><p>${msg.text}</p><span id='time-left'>${msg.date}</span></div>`;
+    }); */
 
   }
 
@@ -45,7 +53,7 @@ export class ConexionComponent implements OnInit {
       date: Date.now()
     };
 
-    this.socketService.emit('send-message', message);
+    this.socket.emit('send-message', message);
     this.messageText = '';
   }
 

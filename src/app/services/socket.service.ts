@@ -8,11 +8,11 @@ export class SocketService {
   socket;
   constructor() {
   }
-  connect(path: string, username: string, nickname: string) {
+  connect(path: string, email: string) {
     if (!path) {
        path = 'http://localhost:8080';
     }
-     return this.socket = io.connect(path, {query: `username= ${username}+${nickname} `});
+     return this.socket = io.connect(path + '/gustavosinbandera1-@', {query: `email = ${email}`});
   }
 
   on(eventName: any, callback: any) {

@@ -4,11 +4,15 @@ var taskController = {};
 
 
 taskController.list = function(req, res){
+  var socket_id = [];
+  var io = req.app.get('socketio');
+
   Task.find({}).exec(function(err, tasks){
     if(err) {
       console.log("Error:" + err);
       res.send(err);
     }else {
+      io.emit('message-received', {hola:'Hola Mundo desde la api task controller'});
       res.json(tasks);
     }
   });
