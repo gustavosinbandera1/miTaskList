@@ -10,9 +10,9 @@ export class SocketService {
   }
   connect(path: string, email: string) {
     if (!path) {
-       path = 'http://localhost:8080';
+       path = 'http://192.168.1.54:8080';
     }
-     return this.socket = io.connect(path + '/gustavosinbandera1-@', {query: `email = ${email}`});
+    return this.socket = io.connect( `${path}/${email}`, {query: `email = ${email}`});
   }
 
   on(eventName: any, callback: any) {
@@ -25,6 +25,8 @@ export class SocketService {
 
   emit(eventName: any, data: any) {
     if (this.socket) {
+      console.log('emitiendo evento ', data);
+
       this.socket.emit(eventName, data);
     }
   }

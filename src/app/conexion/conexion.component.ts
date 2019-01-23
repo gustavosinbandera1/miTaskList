@@ -13,7 +13,7 @@ export class ConexionComponent implements OnInit {
   messages = new Array();
   messageText: any = 'hola';
   output: any;
-
+  email = '';
   constructor(private socket: SocketService) {
   }
 
@@ -21,7 +21,7 @@ export class ConexionComponent implements OnInit {
   }
 
   submit(path: string, email: string, nickname: string) {
-
+    this.email = email;
     this.socket.connect(path, email);
     this.socket.emit('userConnection', email);
     this.socket.on('connectionAccepted', (data: any) => {
@@ -47,14 +47,16 @@ export class ConexionComponent implements OnInit {
   }
 
   sendMessage () {
-    console.log('enviamdo mensaje' + this.messageText);
+   /*  console.log('enviamdo mensaje' + this.messageText);
     const message = {
       text: this.messageText ,
       date: Date.now()
-    };
-
-    this.socket.emit('send-message', message);
-    this.messageText = '';
+    }; */
+    //this.socket.emit('userConnection', this.email);
+    //this.socket.emit('send-message', message);
+    //this.messageText = '';
   }
+
+
 
 }

@@ -4,6 +4,12 @@ var server = http.createServer(app);
 var io = require('socket.io')(server);
 app.set('socketio', io);
 
+var HWC = require('./hardwareControl/socketBuffer');
+var temp = new HWC();
+temp.setUser('gustavo');
+temp.setUser('andres')
+
+console.log('los usuarios:', temp.getUsers());
 
 //const uniqueValidator = require('mongoose-unique-validator');
 var mongoose = require('mongoose');
@@ -18,5 +24,5 @@ server.listen(app.get('port'), () => {
 
 //conexion en tiempo real
 control = require('./hardwareControl/deviceSocketRouter');
-control(io);
+//control(io);
 

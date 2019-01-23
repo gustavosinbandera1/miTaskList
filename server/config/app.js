@@ -18,16 +18,19 @@ app.use('/task', taskRouter2);
 app.use('/device', deviceRouter);
 app.use('/user', userRouter);
 
+//point static path to dist
+//set static folder
+//app.use(express.static(path.join(__dirname, '../../dist/myTaskList')));
+app.use(express.static(path.join(__dirname, '../../src')));
 //catch all others routes and return the index file
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../dist/myTaskList') );
+  //res.sendFile(path.join(__dirname, '../../dist/myTaskList') );
+  res.sendFile(path.join(__dirname, '../../src/index.html') );
 })
 
 
 
-//point static path to dist
-//set static folder
-app.use(express.static(path.join(__dirname, '../../dist/myTaskList')));
+
 //set port
 app.set('port',process.env.PORT | 8080);
 //create server
