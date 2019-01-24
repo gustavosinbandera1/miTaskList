@@ -23,12 +23,15 @@ class socketConexion extends SocketBuffer{
         this.createNamespace(this._namespaceName);//este metodo verifica que el namespace no se hubiera creado antes
         this._namespaceObject = this._io.of('/'  + this._namespaceName);
         this._namespaceObject.on('connect', function(client){
+          this._client = client;
           console.log('en el nuevo namespace');
           callback(true,client);
         });
       }else {
         //atendemos al device
-        callback(false,client);
+        console.log('veamos de que s etgrata', socket);
+
+        callback(false,this._client);
       }
     });
   }
@@ -70,6 +73,11 @@ class socketConexion extends SocketBuffer{
 
   }
 
+  handleDevicesConnection(type, client) {
+    console.log('capturando funcion devices', client);
+
+  }
+
   getDevicesByUser(){
     console.log('vamos a hacer la consulta');
     let query = `select * from devices where email_user="${this._email}@hotmail.com" `;
@@ -88,6 +96,5 @@ class socketConexion extends SocketBuffer{
   }
 
 }
-
 
 module.exports = socketConexion;
