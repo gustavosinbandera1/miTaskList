@@ -4,10 +4,11 @@ var ctrl = {};
  var roomsUser =  {}; //rooms de usuarios conectados, cualquier room en cualquier namespace
  var namespaceQueue = [] ; //all namespace availables to not repeat only unique identifier
  var users= []; //list of all users connected
+ var socketList = {};
  //var devices = []; //list of all device connected array with index-mac and value email owner
  //var actualDevice; ///store the acual device connected
  var email = null;//store the actual email user
-
+ var _io;
 
 
   createRoomDevice = (objData, client) => {
@@ -16,8 +17,10 @@ var ctrl = {};
 //podemos repetir nombre de room que equivale al mismo usuario pero desde
 //diferente cliente, asi que se tienen diferentes id que son propietarios tambien del dispositivo o dispositivos
   createRoomUser = (email,client) => {
-    client.join(email);
+    socketList[client.id] = client;//almacenamos el socket
     roomsUser[client.id] = email;
+    client.join(email);
+
     console.log(' los rooms: ', roomsUser);
     var foundKeys = Object.keys(roomsUser).filter(function(key) {
       console.log('la respuesta', key);
@@ -78,7 +81,6 @@ var ctrl = {};
 
       let temp = namespace_name;
       var nspName= temp.replace(/\s/g, '');
-      console.log('el namespace', nspName);
       //verificamos que no exista el namespace
        if(searchObjectOnArray(nspName, namespaceQueue) == false) {
         createNamespaceAndQueue(nspName);
@@ -99,8 +101,8 @@ var ctrl = {};
 
   ctrl.handleNamespaceConnection = (io, namespace) => {
     console.log('manejando la conexion namespace', namespace);
-
-    let dynamicNamespaces = io.of('/' + namespace);
+    _io = io;
+    let dynamicNamespaces = _io.of('/' + namespace);
 
         dynamicNamespaces.on('connect', handleConnection);
 
@@ -109,6 +111,8 @@ var ctrl = {};
   handleConnection = (socket) => {
     //client = conexion;
     socket.on('userConnection', function(email){
+      console.log('nuevo usuario');
+
       addUser(email);
       createRoomUser(email, socket);//roomsUser[client.id]=email
 
@@ -117,7 +121,10 @@ var ctrl = {};
         if(err) {
           socket.emit('connectionAccepted', {});
         }else {
+          //emitimos al cliente que se conecto los dispositivos disponibles
           socket.emit('connectionAccepted', devices);
+          //socket.broadcast.emit('connectionAccepted', devices);
+          _io.of(email).in(roomsUser[socket.id]).emit('newClientConnected','' );
         }
       });
     });
@@ -141,7 +148,7 @@ var ctrl = {};
       console.log('usuario desconectado', email);
        deleteUser(email);
        deleteRoomUser(client);
-      console.log('lista de usuarios ', users);
+      //console.log('lista de usuarios ', users);
     });
   }
 

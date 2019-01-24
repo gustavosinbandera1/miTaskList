@@ -4,12 +4,17 @@ var server = http.createServer(app);
 var io = require('socket.io')(server);
 app.set('socketio', io);
 
-var HWC = require('./hardwareControl/socketBuffer');
-var temp = new HWC();
-temp.setUser('gustavo');
-temp.setUser('andres')
+var Admin = require('./hardwareControl/adminConexion');
 
-console.log('los usuarios:', temp.getUsers());
+
+
+
+
+
+
+
+
+//console.log('los usuarios:', temp.getUsers());
 
 //const uniqueValidator = require('mongoose-unique-validator');
 var mongoose = require('mongoose');
@@ -22,7 +27,10 @@ server.listen(app.get('port'), () => {
   console.log(`Api running on localhost:${app.get('port')}`);
 });
 
+
+var adminConexion = new Admin(io);
+
 //conexion en tiempo real
-control = require('./hardwareControl/deviceSocketRouter');
+//control = require('./hardwareControl/deviceSocketRouter');
 //control(io);
 

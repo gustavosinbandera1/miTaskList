@@ -25,7 +25,7 @@ export class SocketService {
 
   emit(eventName: any, data: any) {
     if (this.socket) {
-      console.log('emitiendo evento ', data);
+      console.log('emitiendo evento ');
 
       this.socket.emit(eventName, data);
     }

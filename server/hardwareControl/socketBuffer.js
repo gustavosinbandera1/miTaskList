@@ -1,11 +1,20 @@
 class SocketBuffer  {
   constructor() {
-    this._users = [];
+    this._users = [];//user availables in all namespaces
     this._namespaceQueue = [];
     this._roomsUsers = {};
     this._email = null;
+    this._socketList = {},
+    console.log('constructor buffer');
+
   }
-  
+
+  setEmail(email) {
+    this._email = email;
+  }
+  getEmail() {
+    return this._email;
+  }
   setUser(name) {
     this._users.push(name);
   }
@@ -19,37 +28,38 @@ class SocketBuffer  {
     return this._namespaceQueue;
   }
 
-  setRoomUser(roomName, client) {
-    this._roomsUsers[client.id] = roomName
+  setRoomUser(roomName, socketClient) {
+    this._roomsUsers[socketClient.id] = roomName
   }
   getRoomsUser() {
     return this._roomsUsers;
   }
 
+  deleteRoomUser(client){
+    delete this._roomsUsers[client.id];
+  }
+
   getRoomsByEmail(email) {
-    let tempArray = {};
+    let myKey = '';
     Object.keys(this._roomsUsers).filter(function(key) {
       if(this._roomsUsers[key] == email) {
-        tempArray[key] = email;
+        myKey = key;
       }
     });
-    return tempArray;
+    return myKey;
   }
 
-  checkNamespace(namespace_name) {
-      for (var i = 0; i < this._namespaceQueue.length; i++) {
-        if (myArray[i].id === namespace_name) {
-            return true;
-        }
+  namespaceExist(namespace_name) {
+   return  this.searchObjectOnArray(namespace_name,this._namespaceQueue);
+  }
+
+  searchObjectOnArray(nameKey, myArray) {
+    for (var i = 0; i < myArray.length; i++) {
+      if (myArray[i].id === nameKey) {
+        return true;
       }
-    return false;
-  }
-
-  createNamespace(namespace_name) {
-    var ns = {
-      id : namespace_name
-    };
-    this.namespaceQueue.push(ns);
+    }
+   return false;
   }
 
   deleteNamespace(namespace){
@@ -59,7 +69,37 @@ class SocketBuffer  {
     }
   }
 
+  setSocketList(socket) {
+    this._socketList[socket.id] = {
+      socket:socket,
+      email:this._email,
+      room: this._email,
+      query: socket.handshake.query['email '],
+      namespace: email
+    };
+  }
 
+  getSocketList() {
+    return this._socketList;
+  }
+
+  getSocketById(socketId) {
+    return this._socketList[socketId];
+  }
+
+  createNamespace(email_user)  {
+    if(!this.namespaceExist(email_user)) {
+      var ns = {
+                  id : email_user
+                };
+      this.setNamespaceQueue(ns);
+      console.log('namespace creado ', this._namespaceQueue );
+    }else {
+    console.log('el namespace ya existe');
+    }
+  }
 
 }
+
+
 module.exports = SocketBuffer;

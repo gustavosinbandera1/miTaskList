@@ -8,7 +8,7 @@
   <input  #nickname placeholder="Nickname" autocomplete="off" autofocus value="" required>
   <input  #host placeholder="Url" autocomplete="off" autofocus value="" required>
   <button (click)="submit(host.value, email.value, nickname.value)">Submit</button>
-
+  <button ></button>
 </div>
 
 <h1>{{messageText}}</h1>
@@ -20,7 +20,7 @@
                 name="messageText"
                 [(ngModel)]="messageText"
       />
-      <button  (click) = 'sendMessage()' class="btn btn-sm chat-submit-button">Send</button>
+      <button  (click) = 'sendCommand()' class="btn btn-sm chat-submit-button">Send</button>
   </div>
 </div>
 

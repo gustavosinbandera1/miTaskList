@@ -14,6 +14,7 @@ export class ConexionComponent implements OnInit {
   messageText: any = 'hola';
   output: any;
   email = '';
+  data = {};
   constructor(private socket: SocketService) {
   }
 
@@ -26,6 +27,10 @@ export class ConexionComponent implements OnInit {
     this.socket.emit('userConnection', email);
     this.socket.on('connectionAccepted', (data: any) => {
       console.log('aceptaron la conexion socket', data);
+    });
+    this.socket.on('command', (data) => {
+      console.log('escuchando el dicho comando', data);
+
     });
 
   /*   this.socket.on('', (msg: any) => {
@@ -46,15 +51,16 @@ export class ConexionComponent implements OnInit {
 
   }
 
-  sendMessage () {
-   /*  console.log('enviamdo mensaje' + this.messageText);
-    const message = {
-      text: this.messageText ,
-      date: Date.now()
-    }; */
-    //this.socket.emit('userConnection', this.email);
-    //this.socket.emit('send-message', message);
-    //this.messageText = '';
+  disconnect() {
+  this.socket.emit('disconnect', '');
+  }
+
+  sendCommand () {
+   const  data = {
+      room: this.email,
+      command: 'ON'
+    };
+    this.socket.emit('command', data);
   }
 
 
