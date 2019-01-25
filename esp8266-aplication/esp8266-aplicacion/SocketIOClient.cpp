@@ -163,15 +163,8 @@ bool SocketIOClient::monitor() {
 }
 
 void SocketIOClient::sendHandshake(char hostname[]) {
-  String query1 ="GET /socket.io/1/?transport=polling&b64=true&mac=";
-  String mac = WiFi.macAddress();
-  String owner = "&owner=";
-  String ownerValue = "gustavosinbandera1";
-  String queryn = " HTTP/1.1";
-  String query3 = query1+mac+owner+ownerValue+queryn;
-	//client.println(F("GET /socket.io/1/?transport=polling&b64=true&mac=")); //HTTP/1.1"));
-	client.println(query3);
-  client.print(F("Host: "));
+	client.println(F("GET /socket.io/1/?transport=polling&b64=true HTTP/1.1"));
+	client.print(F("Host: "));
 	client.println(hostname);
 	client.println(F("Origin: Arduino\r\n"));
 }

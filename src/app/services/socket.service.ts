@@ -12,7 +12,7 @@ export class SocketService {
     if (!path) {
        path = 'http://192.168.1.54:8080';
     }
-    return this.socket = io.connect( `${path}/${email}`, {query: `email = ${email}`});
+    return this.socket = io.connect( `${path}`, {query: `email = ${email}`});
   }
 
   on(eventName: any, callback: any) {
