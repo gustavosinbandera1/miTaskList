@@ -6,6 +6,7 @@ class socketConexion extends SocketBuffer{
     this._io = io;
     this._namespaceName = '';
     this._namespaceObject = {};
+    this.deviceMac;
     console.log('constructor socket conexion');
   }
 
@@ -14,24 +15,24 @@ class socketConexion extends SocketBuffer{
   checkGeneralConections(callback) {
     console.log('buscando conexiones');
 
-    this._io.of('').on('connect', (socket) => {
+    this._io.on('connect', (socket) => {
       console.log('atendiendo conexion');
       this._namespaceName = this.getNamespaceUserFromSocket(socket);
       this._email = this._namespaceName;
+      socket.on('ADC', function(data){
+        console.log('aqui tambien se escucha');
+      });
+
       //se conecto un dispositivo si no entra a este if
       if(this._namespaceName != undefined) {
         this.createNamespace(this._namespaceName);//este metodo verifica que el namespace no se hubiera creado antes
         this._namespaceObject = this._io.of('/'  + this._namespaceName);
         this._namespaceObject.on('connect', function(client){
           this._client = client;
-          console.log('en el nuevo namespace');
           callback(true,client);
         });
       }else {
-        //atendemos al device
-        console.log('veamos de que s etgrata', socket);
-
-        callback(false,this._client);
+        callback(false,socket);//device connected
       }
     });
   }
@@ -64,19 +65,60 @@ class socketConexion extends SocketBuffer{
       //emit command to hardware
       let command = data.command;
       let roomDevice = data.room;//device mac representa un dispositivo fisico
-      client.in(roomDevice).emit('command', command);
+      //client.of('').in(roomDevice).emit('command', command);
     });
 
-    client.on('hardwareResponse', (data) => {
+    /*client.on('hardwareResponse', (data) => {
       this.io.of(this._namespaceName).to(this.roomsUsers[client.id]).emit('hardwareResponse',data);
+    });*/
+
+  }
+
+  handleDevicesConnection(deviceSocket) {
+    console.log('capturando funcion devices');
+    //get mac
+    let mac = deviceSocket.handshake.query.mac;
+    this.getDeviceByMacAndQueue(mac);
+    this.listenDeviceCommands(deviceSocket, this._io);
+
+
+  }
+
+  listenDeviceCommands(deviceSocket,io) {
+    console.log('vamos a empezar a escuchar al modulo wifi......');
+
+    deviceSocket.on('responseCommand',(data) => {
+      //data contain room and namespace of owner
+      //we need broadcast the response to all owners on namespace
+      //when client emit any command to the device , the the device emit a response
+      //to this general namespace and the server need to redirect this response to the client = owner
+      io.of('gustavosinbandera1').in('gustavosinbandera1').emit('emtiendo datos desde el servidor');
     });
 
+    deviceSocket.on('ADC', function(data){
+      console.log('los datos', data);
+      io.of('/gustavosinbandera1').in('gustavosinbandera1').emit('ADC',data);
+    });
   }
 
-  handleDevicesConnection(type, client) {
-    console.log('capturando funcion devices', client);
+  getDeviceByMacAndQueue(mac){
+    console.log('vamos a hacer la consulta por mac');
+    let query = `select * from devices where mac_device="${mac}" `;
 
+    db.sendQuery(query, (err, device) => {
+      if(err) {
+        console.log('nada de datos mas bien error');
+
+        return [];
+      }else {
+        this.deviceMac = device;
+        console.log('este es el device: ',this.deviceMac);
+        this._devicesList[mac] = device;
+      }
+    });
   }
+
+
 
   getDevicesByUser(){
     console.log('vamos a hacer la consulta');
@@ -90,7 +132,6 @@ class socketConexion extends SocketBuffer{
       }else {
         console.log('si hay datos');
         this.devices = devices;
-        ;
       }
     });
   }

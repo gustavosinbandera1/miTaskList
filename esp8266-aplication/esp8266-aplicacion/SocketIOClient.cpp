@@ -23,7 +23,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 */
 #define ESP32
-#include <SocketIOClient.h>
+#include "SocketIOClient.h"
 
 
 String tmpdata = "";	//External variables
@@ -163,8 +163,15 @@ bool SocketIOClient::monitor() {
 }
 
 void SocketIOClient::sendHandshake(char hostname[]) {
-	client.println(F("GET /socket.io/1/?transport=polling&b64=true HTTP/1.1"));
-	client.print(F("Host: "));
+  String query1 ="GET /socket.io/1/?transport=polling&b64=true&mac=";
+  String mac = WiFi.macAddress();
+  String owner = "&owner=";
+  String ownerValue = "gustavosinbandera1";
+  String queryn = " HTTP/1.1";
+  String query3 = query1+mac+owner+ownerValue+queryn;
+	//client.println(F("GET /socket.io/1/?transport=polling&b64=true&mac=")); //HTTP/1.1"));
+	client.println(query3);
+  client.print(F("Host: "));
 	client.println(hostname);
 	client.println(F("Origin: Arduino\r\n"));
 }
@@ -207,7 +214,7 @@ bool SocketIOClient::readHandshake() {
 	}
 	Serial.println(" ");
 	Serial.print(F("Connected. SID="));
-	Serial.println(sid);	// sid:transport:timeout 
+	Serial.println(sid);	// sid:transport:timeout
 
 	while (client.available()) readLine();
 	client.stop();
@@ -235,7 +242,7 @@ bool SocketIOClient::readHandshake() {
 	client.print(F("Cookie: io="));
 	client.print(sid);
 	client.print("\r\n");
-	
+
 	client.print(F("Connection: Upgrade\r\n"));
 
 	client.println(F("Upgrade: websocket\r\n"));	// socket.io v2.0.3 supported

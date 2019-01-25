@@ -17,4 +17,3 @@ server.listen(app.get('port'), () => {
 
 //aplicacion para la comunicacion en tiempo real y control de hardware
 var adminConexion = new Admin(io);
-
