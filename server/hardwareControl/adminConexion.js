@@ -9,11 +9,11 @@ class AdminConection extends SocketConection {
     })
      this.checkGeneralConections((type, nspClient) => {//type true = users false = devices
       if(type) {//user connected
-          this.listenEventsUserNamespace(nspClient);
+          this.listenEventsUserSocket(nspClient);
       }else {//device connected
         this.handleDevicesConnection(nspClient);
       }
-    }); 
+    });
   }
 
 

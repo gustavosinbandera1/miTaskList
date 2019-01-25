@@ -2,7 +2,7 @@ var db = require('../sqlSerices/sqlQuery');
 class SocketBuffer  {
   constructor() {
     this._users = [];//user availables in all namespaces
-    this._namespaceQueue = [];
+   // this._namespaceQueue = [];
     this._roomsUsers = {};
     this._roomsDevices = {};
     this._email = null;
@@ -44,12 +44,7 @@ class SocketBuffer  {
   getUsers() {
     return this._users;
   }
-  setNamespaceQueue(namespace_name) {
-    this._namespaceQueue.push(namespace_name);
-  }
-  getNamespaceQueue() {
-    return this._namespaceQueue;
-  }
+
 
   setRoomUser(roomName, socketClient) {
     this._roomsUsers[socketClient.id] = roomName
@@ -79,33 +74,12 @@ class SocketBuffer  {
     return myKey;
   }
 
-  namespaceExist(namespace_name) {
-   return  this.searchObjectOnArray(namespace_name,this._namespaceQueue);
-  }
-
-  searchObjectOnArray(nameKey, myArray) {
-    for (var i = 0; i < myArray.length; i++) {
-      if (myArray[i].id === nameKey) {
-        return true;
-      }
-    }
-   return false;
-  }
-
-  deleteNamespace(namespace){
-    let index = this.namespaceQueue.indexOf(namespace);
-    if(index > -1) {
-      namespaceQueue.splice(index,1);
-    }
-  }
-
   setSocketList(socket) {
     this._socketList[socket.id] = {
       socket:socket,
       email:this._email,
       room: this._email,
       query: socket.handshake.query['email '],
-      namespace: email
     };
   }
 
@@ -115,18 +89,6 @@ class SocketBuffer  {
 
   getSocketById(socketId) {
     return this._socketList[socketId];
-  }
-
-  createNamespace(email_user)  {
-    if(!this.namespaceExist(email_user)) {
-      var ns = {
-                  id : email_user
-                };
-      this.setNamespaceQueue(ns);
-      console.log('namespace creado ', this._namespaceQueue );
-    }else {
-    console.log('el namespace ya existe');
-    }
   }
 
 }
