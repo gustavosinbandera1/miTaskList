@@ -29,6 +29,10 @@ export class ConexionComponent implements OnInit {
       console.log('aceptaron la conexion socket', data);
       this.devices = data;
     });
+
+    this.socket.on('ADC', (data) => {
+      console.log('datos del modulo esp8266: ', data);
+    });
   }
 
   submit(path: string, email: string, nickname: string) {

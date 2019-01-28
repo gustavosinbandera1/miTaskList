@@ -95,6 +95,11 @@ class socketConexion extends SocketBuffer{
       //io.of('/gustavosinbandera1').in('gustavosinbandera1').emit('ADC',data);
       io.sockets.in('gustavosinbandera1').emit('ADC',data);
     });
+
+    deviceSocket.on('disconnect', () => {
+      console.log('un dispositivo se desconecto');
+
+    });
   }
 
   getDeviceByMacAndQueue(mac){

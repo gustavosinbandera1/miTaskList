@@ -20,12 +20,12 @@ app.use('/user', userRouter);
 
 //point static path to dist
 //set static folder
-app.use(express.static(path.join(__dirname, '../../dist/myTaskList')));
-//app.use(express.static(path.join(__dirname, '../../src')));
+//app.use(express.static(path.join(__dirname, '../../dist/myTaskList')));
+app.use(express.static(path.join(__dirname, '../../src')));
 //catch all others routes and return the index file
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../dist/myTaskList/index.html') );
-  //res.sendFile(path.join(__dirname, '../../src/index.html') );
+  //res.sendFile(path.join(__dirname, '../../dist/myTaskList/index.html') );
+ res.sendFile(path.join(__dirname, '../../src/index.html') );
 })
 
 
