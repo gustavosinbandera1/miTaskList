@@ -22,7 +22,7 @@ export class ConexionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.email = 'gustavosinbandera1';
+   /*  this.email = 'gustavosinbandera1';
     this.connection = this.socket.connect('', this.email);
     this.connection.emit('userConnection', this.email);
     this.connection.on('connectionAccepted', (data: any) => {
@@ -32,31 +32,20 @@ export class ConexionComponent implements OnInit {
 
     this.socket.on('ADC', (data) => {
       console.log('datos del modulo esp8266: ', data);
-    });
+    }); */
   }
 
   submit(path: string, email: string, nickname: string) {
-  /*   this.email = email;
+    this.email = email;
     this.connection = this.socket.connect(path, email);
     this.connection.emit('userConnection', email);
     this.connection.on('connectionAccepted', (data: any) => {
       console.log('aceptaron la conexion socket', data);
-    }); */
-  /*   this.socket.on('', (msg: any) => {
-      console.log('recibiendo los mensajes');
-      this.messages.push(msg);
-      console.log(msg);
-      console.log(this.messages);
-      this.output += `<div id='container'><p>${msg.text}</p><span id='time-left'>${msg.date}</span></div>`;
-    }); */
+    });
 
-   /*  this.socket.on('message-received', (msg: any) => {
-      console.log('recibiendo los mensajes');
-      this.messages.push(msg);
-      console.log(msg);
-      console.log(this.messages);
-      this.output += `<div id='container'><p>${msg.text}</p><span id='time-left'>${msg.date}</span></div>`;
-    }); */
+    this.socket.on('ADC', (data) => {
+      console.log('datos del modulo esp8266: ', data);
+    });
 
   }
 

@@ -11,7 +11,7 @@ class AdminConection extends SocketConection {
       if(type) {//user connected
           this.listenEventsUserSocket(nspClient);
       }else {//device connected
-        this.handleDevicesConnection(nspClient);
+        this.handleDevicesConnection(nspClient,this);
       }
     });
   }

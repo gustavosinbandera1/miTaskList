@@ -1,12 +1,13 @@
- SocketBuffer  = require('./socketBuffer');
+SocketBuffer  = require('./socketBuffer');
  db = require('../sqlSerices/sqlQuery');
+
+
 class socketConexion extends SocketBuffer{
   constructor(io) {
     super();
     this._io = io;
     this._namespaceName = '';
     this._namespaceObject = {};
-    this.deviceMac;
     this._devices = {};
     console.log('constructor socket conexion');
   }
@@ -31,24 +32,28 @@ class socketConexion extends SocketBuffer{
 
   getEmailUserFromSocket(socket) {
     let temp_email = socket.handshake.query['email '];
+    let email;
     if(temp_email) {
-      let temp =  temp_email.replace(/\s/g, '');
-      console.log('parametro del socket client en query=', temp);
+      //let temp =  temp_email.replace(/\s/g, '');
+      email = temp_email.trim();
+      console.log('los parametros del queryt', email);
 
-      return temp;
+      return email;
     }
     return undefined;
   }
 
 
   listenEventsUserSocket(client) {
-    this.getDevicesByUser((devices) => {
+     this.getDevicesByUser((devices) => {
       console.log('los devices', devices);
 
       this._devices = devices;
     });
 
     this.setRoomUser(this._email, client);
+    console.log('room del usuario:', this._email);
+
     client.join(this._email);
 
     client.on('userConnection',(data) => {
@@ -62,25 +67,32 @@ class socketConexion extends SocketBuffer{
 
     client.on('command', (data) => {
       //data.command, data.email-owner para que el modulo pueda devolver respuesta dado el caso
-      io.sockets.in(data.mac).emit('command', data);//emitimoscomando al dispositivo que requieran en data.mac
+      this._io.sockets.in(data.mac).emit('command', data);//emitimoscomando al dispositivo que requieran en data.mac
     });
 
   }
 
-  handleDevicesConnection(deviceSocket) {
+
+  handleDevicesConnection(deviceSocket,this_) {
     console.log('capturando funcion devices');
-    //get mac
+
     let mac = deviceSocket.handshake.query.mac;
     deviceSocket.join(mac);
-    this.getDeviceByMacAndQueue(mac);
-    this.listenDeviceCommands(deviceSocket, this._io);
 
+    this_.getDeviceByMacAndQueue(mac,function(device){
+      //let email = this_.deviceInfo.email_user;
+      let email = device.email_user;
+      console.log('se capturo el dispositivo por su mac', device);
+      let tempEmail = email.slice(0,email.indexOf('@'));
+      console.log('esta es la variable temp', tempEmail);
+      this_.listenDeviceCommands(deviceSocket, this_._io, tempEmail);
+    });
 
   }
 
-  listenDeviceCommands(deviceSocket,io) {
+  listenDeviceCommands(deviceSocket,io,deviceOwner) {
     console.log('vamos a empezar a escuchar al modulo wifi......');
-//en data debe llegar el email del dueno, el estado de los pines del dispositivo
+    //en data debe llegar el email del dueno, el estado de los pines del dispositivo
     deviceSocket.on('responseCommand',(data) => {
       //data contain room and namespace of owner
       //we need broadcast the response to all owners on namespace
@@ -93,41 +105,36 @@ class socketConexion extends SocketBuffer{
     deviceSocket.on('ADC', function(data){
       console.log('los datos', data);
       //io.of('/gustavosinbandera1').in('gustavosinbandera1').emit('ADC',data);
-      io.sockets.in('gustavosinbandera1').emit('ADC',data);
-    });
-
-    deviceSocket.on('disconnect', () => {
-      console.log('un dispositivo se desconecto');
-
+      io.sockets.in(deviceOwner).emit('ADC',data);
     });
   }
 
-  getDeviceByMacAndQueue(mac){
-    console.log('vamos a hacer la consulta por mac');
-    let query = `select * from devices where mac_device="${mac}" `;
+  getDeviceByMacAndQueue(mac,callback){
+      console.log('vamos a hacer la consulta por mac', mac);
+      let query = `select * from DEVICES where mac_device="${mac}" `;
 
-    db.sendQuery(query, (err, device) => {
-      if(err) {
-        console.log('nada de datos mas bien error');
-
-        return [];
-      }else {
-        this.deviceMac = device;
-        console.log('este es el device: ',this.deviceMac);
-        this._devicesList[mac] = device;
-      }
-    });
+      db.sendQuery(query, (err, device) => {
+        if(err) {
+          console.log('nada de datos mas bien error');
+          return [];
+        }else {
+          let deviceInfo = device[0];
+          console.log('este es el device: ',deviceInfo.email_user);
+          ///this._devicesList[mac] = device[0];
+          callback(deviceInfo);
+        }
+      });
   }
 
 
 
   getDevicesByUser(callback){
-    console.log('vamos a hacer la consulta');
-    let query = `select * from devices where email_user="${this._email}@hotmail.com" `;
+    console.log('vamos a hacer la consulta getdevicesByUser');
+    let query = `select * from DEVICES where email_user="${this._email}@hotmail.com" `;
 
     db.sendQuery(query, (err, devices) => {
       if(err) {
-        console.log('nada de datos mas bien error');
+        console.log('nada de usuarios');
 
         return [];
       }else {
@@ -136,8 +143,9 @@ class socketConexion extends SocketBuffer{
         callback(devices);
       }
     });
-  }
 
+
+  }
 }
 
 module.exports = socketConexion;

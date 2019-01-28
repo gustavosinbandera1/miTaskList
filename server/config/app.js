@@ -23,9 +23,9 @@ app.use('/user', userRouter);
 //app.use(express.static(path.join(__dirname, '../../dist/myTaskList')));
 app.use(express.static(path.join(__dirname, '../../src')));
 //catch all others routes and return the index file
-app.get('*', (req, res) => {
-  //res.sendFile(path.join(__dirname, '../../dist/myTaskList/index.html') );
- res.sendFile(path.join(__dirname, '../../src/index.html') );
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html') );
+  //res.sendFile(path.join(__dirname, 'index.html') );
 })
 
 
