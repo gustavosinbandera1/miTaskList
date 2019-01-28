@@ -33,6 +33,8 @@ class socketConexion extends SocketBuffer{
     let temp_email = socket.handshake.query['email '];
     if(temp_email) {
       let temp =  temp_email.replace(/\s/g, '');
+      console.log('parametro del socket client en query=', temp);
+
       return temp;
     }
     return undefined;

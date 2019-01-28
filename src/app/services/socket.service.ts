@@ -10,7 +10,8 @@ export class SocketService {
   }
   connect(path: string, email: string) {
     if (!path) {
-       path = 'http://192.168.1.54:8080';
+       //path = 'http://localhost:8080';
+       path = window.location.hostname;
     }
     return this.socket = io.connect( `${path}`, {query: `email = ${email}`});
   }

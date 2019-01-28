@@ -1,10 +1,12 @@
 var mysql = require('mysql');
 
 var pool = mysql.createPool({
-  host: 'localhost',
-    user: 'root',
+  //host: 'localhost',
+  host: 'iotdb.c9e4ojgpehwj.us-east-1.rds.amazonaws.com',
+  port: '3306',
+  user: 'root',
     password: 'nicolas901028',
-    database: 'iot_db'
+    database: 'iotdb'
   /* host: process.env.MYSQL_HOST,
   user: process.env.MYSQL_USER,
   password: process.env.MYSQL_PASS,
